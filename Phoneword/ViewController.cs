@@ -36,6 +36,19 @@ namespace Phoneword
                     CallButton.Enabled = true;
                 }
             };
+
+            CallButton.TouchUpInside += (object sender, EventArgs e) => {
+                // Use URL handler with tel: prefix to invoke Apple's Phone app...
+                var url = new NSUrl("tel:" + translatedNumber);
+
+                // ...otherwise show an alert dialog
+                if (!UIApplication.SharedApplication.OpenUrl(url))
+                {
+                    var alert = UIAlertController.Create("Not supported", "Scheme 'tel:' is not supported on this device", UIAlertControllerStyle.Alert);
+                    alert.AddAction(UIAlertAction.Create("Ok", UIAlertActionStyle.Default, null));
+                    PresentViewController(alert, true, null);
+                }
+            };
         }
 
         public override void DidReceiveMemoryWarning()
